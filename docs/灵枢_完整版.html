@@ -354,19 +354,12 @@ function loadProduct(){
   var ov=document.getElementById('product-overlay');
   var fr=document.getElementById('product-frame');
   ov.style.display='block';
-  try{
-    var html=decodeURIComponent(Array.prototype.map.call(atob(_productB64),function(c){return'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)}).join(''));
-    var blob=new Blob([html],{type:'text/html;charset=utf-8'});
-    var url=URL.createObjectURL(blob);
-    fr.src=url;
-  }catch(e){
-    fr.srcdoc='<div style=\"display:flex;align-items:center;justify-content:center;height:100%;color:#fff;font-family:sans-serif;font-size:18px\">产品加载中，请稍候...</div>';
-    setTimeout(function(){
-      var html=decodeURIComponent(Array.prototype.map.call(atob(_productB64),function(c){return'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)}).join(''));
-      var blob=new Blob([html],{type:'text/html;charset=utf-8'});
-      fr.src=URL.createObjectURL(blob);
-    },100);
-  }
+  var binary=atob(_productB64);
+  var bytes=new Uint8Array(binary.length);
+  for(var i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+  var html=new TextDecoder('utf-8').decode(bytes);
+  var blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  fr.src=URL.createObjectURL(blob);
 }
 </script>
 
